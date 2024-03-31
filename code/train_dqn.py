@@ -33,16 +33,16 @@ def get_action(model, state, epsilon, device, use_softmax=True):
 
 def validate(model: DQN, env: Env, action_list: list, device: torch.device):
     env.reset()
+    state = env.get_state()
 
     cumulative_rewards = 0
     actions = []
 
     for time in range(8):
-        state = env.get_state()
-
         action = get_action(model, state, 0, device, False)
-        _, reward = env.processing(time, action_list[action])
+        next_state, reward = env.processing(time, action_list[action])
 
+        state = next_state
         if reward < 0:
             break
 
